@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { UsersRepository } from './users.repository';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UsersService {
-  private users = [];
-  private id = 0;
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-  findAll(email?: string) {
-    if (email) {
-      const user = this.users.find((u) => u.email === email);
-      return user;
-    }
-    return this.users;
+  async findOne(email: string) {
+    return this.usersRepository.findOne({ email });
   }
 
-  create(user: { email: string; password: string; joinDate: Date }) {
-    this.id++;
-    this.users.push({ id: this.id, ...user });
-    return user;
+  async create(user: { email: string; password: string; joinDate: Date }) {
+    return this.usersRepository.create({
+      userId: randomUUID().toString(),
+      email: user.email,
+      password: user.password,
+      joinDate: user.joinDate,
+    });
   }
 }

@@ -7,12 +7,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get() // GET /users or /users?email=value
-  findAll(@Query('email') email?: string) {
-    return this.usersService.findAll(email);
+  async findOne(@Query('email') email?: string) {
+    return this.usersService.findOne(email);
   }
 
   @Post() // POST /users
-  create(@Body() user: { email: string; password: string; joinDate: Date }) {
+  async create(
+    @Body() user: { email: string; password: string; joinDate: Date },
+  ) {
     return this.usersService.create(user);
   }
 }
