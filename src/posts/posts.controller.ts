@@ -12,7 +12,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import {
+  FileInterceptor,
+  FilesInterceptor,
+  NoFilesInterceptor,
+} from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
@@ -38,18 +42,17 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get() // GET /posts or /posts?ownerEmail=value
-  findAll(@Query('ownerEmail') ownerEmail?: string) {
-    return this.postsService.findAll(ownerEmail);
+  async findAll(@Query('email') email?: string) {
+    if (email) {
+      return this.postsService.findAll(email);
+    }
+    return this.postsService.findAll();
   }
 
-  @Get(':id') // GET /posts/:id
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
-  }
-
+  // @UseInterceptors(NoFilesInterceptor())
   @Post() // POST /posts
   @UseInterceptors(FileInterceptor('mediaInput', { storage }))
-  create(
+  async create(
     @UploadedFile() file: Express.Multer.File,
     @Body()
     post: {
@@ -62,15 +65,16 @@ export class PostsController {
       fileName: file.filename,
       ...post, // email, description, mediaType
     });
+    // return this.postsService.create({ ...post, fileName: 'df' });
   }
 
-  @Patch(':id') // PATCH /posts/:id
-  update(@Param('id') id: string, @Body() userUpdate: {}) {
-    return { id, ...userUpdate };
-  }
+  // @Patch(':id') // PATCH /posts/:id
+  // update(@Param('id') id: string, @Body() userUpdate: {}) {
+  //   return { id, ...userUpdate };
+  // }
 
-  @Delete(':id') // DELETE /posts/:id
-  delete(@Param('id') id: string) {
-    return { id };
-  }
+  // @Delete(':id') // DELETE /posts/:id
+  // delete(@Param('id') id: string) {
+  //   return { id };
+  // }
 }

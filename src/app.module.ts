@@ -10,7 +10,9 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     PostsModule,
     UsersModule,
-    MongooseModule.forRoot('mongodb://localhost/instapic'),
+    MongooseModule.forRoot(
+      'mongodb+srv://mutahar:djpotato1@cluster0.ewzja.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+    ),
   ],
   controllers: [AppController],
   providers: [AppService],

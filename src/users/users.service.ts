@@ -10,6 +10,10 @@ export class UsersService {
     return this.usersRepository.findOne({ email });
   }
 
+  async findAll() {
+    return this.usersRepository.findAll();
+  }
+
   async create(user: { email: string; password: string; joinDate: Date }) {
     return this.usersRepository.create({
       userId: randomUUID().toString(),

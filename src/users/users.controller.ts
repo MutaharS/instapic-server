@@ -7,7 +7,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get() // GET /users or /users?email=value
-  async findOne(@Query('email') email?: string) {
+  async findOne(@Query('email') email: string) {
     return this.usersService.findOne(email);
   }
 
